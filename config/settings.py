@@ -13,8 +13,8 @@ env = environ.Env(
 )
 env.read_env(BASE_DIR / ".env")
 
-SECRET_KEY = env("SECRET_KEY", default="django-insecure-change-me")
-DEBUG = env.bool("DEBUG", default=True)
+SECRET_KEY = 'django-insecure-)9jijekovj+6si)t^65&vr1543!(v!72@*kscxvs6v0sx#8lz^'
+DEBUG = True
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "suivis.apps.SuivisConfig",
     "evaluations.apps.EvaluationsConfig",
     "reporting.apps.ReportingConfig",
+
 ]
 
 SITE_ID = 1
@@ -75,12 +76,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "config.wsgi.application"
+ASGI_APPLICATION = "config.asgi.application"
+
+# DATABASES = {
+#     "default": env.db(
+#         "DATABASE_URL",
+#         default="postgresql://internship_mgmt_vg0z_user:xXpSXtKh3vT7VqpK7VZM1UVapvQCJVwv@dpg-d47fnlfdiees739b9hs0-a.oregon-postgres.render.com/internship_mgmt_vg0z",
+#     )
+# }
 
 DATABASES = {
-    "default": env.db(
-        "DATABASE_URL",
-        default="postgresql://internship_mgmt_vg0z_user:xXpSXtKh3vT7VqpK7VZM1UVapvQCJVwv@dpg-d47fnlfdiees739b9hs0-a.oregon-postgres.render.com/internship_mgmt_vg0z",
-    )
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
 }
 
 AUTH_PASSWORD_VALIDATORS = [

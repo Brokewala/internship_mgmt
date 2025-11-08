@@ -145,3 +145,10 @@ class NoteFinale(TimeStampedModel):
             self.save(update_fields=["valeur", "updated_at"])
         return self.valeur
 
+from django.views.generic import ListView
+from .models import EvaluationTuteurEntreprise  # ou EvaluationTuteurEcole
+
+class EvaluationListView(ListView):
+    model = EvaluationTuteurEntreprise  # <- choisis celle que tu veux lister
+    context_object_name = "evaluations"
+    template_name = "evaluations/list.html"
