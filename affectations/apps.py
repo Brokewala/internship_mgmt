@@ -6,3 +6,6 @@ class AffectationsConfig(AppConfig):
     name = "affectations"
     verbose_name = "Affectations"
 
+    def ready(self) -> None:
+        from . import signals  # noqa: F401
+
