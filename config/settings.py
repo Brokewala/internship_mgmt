@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "rest_framework",
     "django_filters",
+    "drf_yasg",
     "import_export",
     "accounts.apps.AccountsConfig",
     "core.apps.CoreConfig",
@@ -114,6 +115,7 @@ REPORTS_DIGEST_RECIPIENTS = env.list("REPORTS_DIGEST_RECIPIENTS", default=[])
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ],
