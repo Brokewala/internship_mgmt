@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+  <h1>Mon profil</h1>
+  <p><strong>Nom :</strong> {{ user.get_full_name }}</p>
+  <p><strong>Email :</strong> {{ user.email }}</p>
+  <p><strong>Rôle :</strong> {{ user.get_role_display }}</p>
+  {% if user.profile.bio %}
+  <p><strong>Biographie :</strong> {{ user.profile.bio }}</p>
+  {% endif %}
+</div>
+{% endblock %}
+

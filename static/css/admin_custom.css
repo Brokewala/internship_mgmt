@@ -1,0 +1,26 @@
+:root {
+  --bs-primary: #2c3e50;
+  --bs-body-bg: #f5f6fa;
+}
+
+.card.text-bg-dark {
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+}
+
+.card.text-bg-primary {
+  background: linear-gradient(135deg, #2980b9, #3498db);
+}
+
+.card.text-bg-success {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+}
+
+.card.text-bg-warning {
+  background: linear-gradient(135deg, #f39c12, #f1c40f);
+  color: #1f2d3d;
+}
+
+.card.text-bg-info {
+  background: linear-gradient(135deg, #16a085, #1abc9c);
+}
+

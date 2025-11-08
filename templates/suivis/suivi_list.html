@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+  <h1>Suivis d'affectations</h1>
+  <div class="list-group">
+    {% for suivi in suivis %}
+    <div class="list-group-item">
+      <h5 class="mb-1">{{ suivi.affectation.student.get_full_name|default:suivi.affectation.student.username }}</h5>
+      <p class="mb-1">{{ suivi.summary }}</p>
+      <small>Réunion du {{ suivi.meeting_date|date:"d/m/Y" }}</small>
+    </div>
+    {% empty %}
+    <div class="list-group-item">Pas de suivi enregistré.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
