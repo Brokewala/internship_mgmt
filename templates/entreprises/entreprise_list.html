@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+  <h1>Entreprises</h1>
+  <ul class="list-group">
+    {% for entreprise in entreprises %}
+    <li class="list-group-item">
+      <h5>{{ entreprise.name }}</h5>
+      <p class="mb-1">{{ entreprise.description|default:"Description à venir" }}</p>
+      {% if entreprise.website %}
+      <a href="{{ entreprise.website }}" target="_blank" rel="noopener">Visiter le site</a>
+      {% endif %}
+    </li>
+    {% empty %}
+    <li class="list-group-item">Aucune entreprise enregistrée pour le moment.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
+

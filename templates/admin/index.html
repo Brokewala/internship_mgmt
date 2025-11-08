@@ -1,0 +1,72 @@
+{% extends "admin/base_site.html" %}
+{% load i18n dashboard_tags %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-4">
+  <h1 class="display-5 mb-4">Tableau de bord</h1>
+  {% dashboard_kpis as kpis %}
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-3">
+    <div class="col">
+      <div class="card text-bg-dark h-100">
+        <div class="card-body">
+          <h5 class="card-title">Utilisateurs</h5>
+          <p class="card-text fs-2">{{ kpis.total_users }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card text-bg-primary h-100">
+        <div class="card-body">
+          <h5 class="card-title">Étudiants</h5>
+          <p class="card-text fs-2">{{ kpis.total_students }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card text-bg-success h-100">
+        <div class="card-body">
+          <h5 class="card-title">Offres</h5>
+          <p class="card-text fs-2">{{ kpis.total_offers }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card text-bg-warning h-100">
+        <div class="card-body">
+          <h5 class="card-title">Candidatures</h5>
+          <p class="card-text fs-2">{{ kpis.total_applications }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card text-bg-info h-100">
+        <div class="card-body">
+          <h5 class="card-title">Affectations</h5>
+          <p class="card-text fs-2">{{ kpis.total_assignments }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h2>Offres populaires</h2>
+    <div class="list-group">
+      {% top_offers 5 as offers %}
+      {% for offer in offers %}
+      <div class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="mb-1">{{ offer.title }}</h5>
+          <small>{{ offer.entreprise.name }}</small>
+        </div>
+        <span class="badge text-bg-secondary">{{ offer.applications }} candidatures</span>
+      </div>
+      {% empty %}
+      <div class="list-group-item">Pas encore de données disponibles.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+

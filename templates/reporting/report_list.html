@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+  <h1>Rapports</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Étudiants</th>
+        <th>Offres</th>
+        <th>Affectations</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for report in reports %}
+      <tr>
+        <td>{{ report.generated_at|date:"d/m/Y H:i" }}</td>
+        <td>{{ report.total_students }}</td>
+        <td>{{ report.total_offers }}</td>
+        <td>{{ report.total_assignments }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4">Aucun rapport généré.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+
