@@ -48,3 +48,23 @@ def send_assignment_email(affectation: Affectation) -> int:
 
     email = EmailMessage(subject=subject, body=body, from_email=settings.DEFAULT_FROM_EMAIL, to=[recipient])
     return email.send(fail_silently=False)
+
+
+def send_assignment_reminder_email(affectation: Affectation) -> int:
+    student = affectation.student
+    recipient = student.email
+    if not recipient:
+        return 0
+
+    subject = f"Rappel : suivi de votre stage chez {affectation.entreprise.name}"
+    greeting = _format_student_name(student)
+    body = (
+        f"Bonjour {greeting},\n\n"
+        f"Un rappel concernant votre stage chez {affectation.entreprise.name}.\n"
+        f"Période prévue : du {affectation.start_date:%d/%m/%Y} au {affectation.end_date:%d/%m/%Y}.\n"
+        "Merci de mettre à jour vos livrables et vos comptes-rendus si nécessaire.\n\n"
+        "L'équipe pédagogique"
+    )
+
+    email = EmailMessage(subject=subject, body=body, from_email=settings.DEFAULT_FROM_EMAIL, to=[recipient])
+    return email.send(fail_silently=False)

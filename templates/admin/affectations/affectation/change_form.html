@@ -1,0 +1,18 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+  {{ block.super }}
+  {% if original %}
+    <li>
+      <a class="dropdown-item" href="{% url 'admin:affectations_affectation_generate_convention' original.pk %}">
+        {% trans "Générer la convention (PDF)" %}
+      </a>
+    </li>
+    <li>
+      <a class="dropdown-item" href="{% url 'admin:affectations_affectation_send_reminder' original.pk %}">
+        {% trans "Envoyer un email de rappel" %}
+      </a>
+    </li>
+  {% endif %}
+{% endblock %}

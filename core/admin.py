@@ -1,13 +1,14 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from core.admin_mixins import AuditLogAdminMixin
 from core.admin_utils import export_as_csv_action
 
 from .models import Alerte, AuditLog, Departement, Programme, Promotion
 
 
 @admin.register(Departement)
-class DepartementAdmin(admin.ModelAdmin):
+class DepartementAdmin(AuditLogAdminMixin, admin.ModelAdmin):
     list_display = ("code", "name", "created_at")
     search_fields = ("code", "name")
     actions = ("exporter_en_csv",)
@@ -20,7 +21,7 @@ class DepartementAdmin(admin.ModelAdmin):
 
 
 @admin.register(Programme)
-class ProgrammeAdmin(admin.ModelAdmin):
+class ProgrammeAdmin(AuditLogAdminMixin, admin.ModelAdmin):
     list_display = ("code", "title", "departement")
     search_fields = ("code", "title", "departement__name")
     list_filter = ("departement",)
@@ -37,7 +38,7 @@ class ProgrammeAdmin(admin.ModelAdmin):
 
 
 @admin.register(Promotion)
-class PromotionAdmin(admin.ModelAdmin):
+class PromotionAdmin(AuditLogAdminMixin, admin.ModelAdmin):
     list_display = ("label", "programme", "year", "start_date", "end_date")
     list_filter = ("programme", "year")
     search_fields = ("label", "programme__title")
@@ -54,7 +55,7 @@ class PromotionAdmin(admin.ModelAdmin):
 
 
 @admin.register(Alerte)
-class AlerteAdmin(admin.ModelAdmin):
+class AlerteAdmin(AuditLogAdminMixin, admin.ModelAdmin):
     list_display = ("titre", "niveau", "affectation", "resolue", "created_at")
     list_filter = ("niveau", "resolue", "created_at")
     search_fields = ("titre", "message", "affectation__student__username")

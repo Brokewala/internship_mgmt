@@ -23,6 +23,16 @@ def generate_convention_pdf_content(affectation: Affectation) -> bytes:
     ).encode("utf-8")
 
 
+def build_convention_pdf_response(affectation: Affectation) -> HttpResponse:
+    filename = f"convention-{slugify(str(affectation.student))}-{affectation.pk}.pdf"
+    response = HttpResponse(
+        generate_convention_pdf_content(affectation),
+        content_type="application/pdf",
+    )
+    response["Content-Disposition"] = f"attachment; filename={filename}"
+    return response
+
+
 def build_conventions_archive(
     queryset: Iterable[Affectation] | QuerySet[Affectation],
 ) -> HttpResponse:
