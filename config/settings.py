@@ -76,7 +76,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": env.db(
         "DATABASE_URL",
-        default="postgres://internship:internship@db:5432/internship_mgmt",
+        default="postgresql://internship_mgmt_vg0z_user:xXpSXtKh3vT7VqpK7VZM1UVapvQCJVwv@dpg-d47fnlfdiees739b9hs0-a.oregon-postgres.render.com/internship_mgmt_vg0z",
     )
 }
 
