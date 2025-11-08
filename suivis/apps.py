@@ -6,3 +6,6 @@ class SuivisConfig(AppConfig):
     name = "suivis"
     verbose_name = "Suivis"
 
+    def ready(self) -> None:
+        from . import signals  # noqa: F401
+

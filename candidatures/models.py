@@ -11,7 +11,6 @@ class Candidature(TimeStampedModel):
     class Status(models.TextChoices):
         DRAFT = "DRAFT", _("Brouillon")
         SUBMITTED = "SUBMITTED", _("Soumise")
-        INTERVIEW = "INTERVIEW", _("Entretien")
         ACCEPTED = "ACCEPTED", _("Acceptée")
         REJECTED = "REJECTED", _("Refusée")
 
@@ -38,8 +37,17 @@ class Candidature(TimeStampedModel):
     class Meta:
         verbose_name = _("Candidature")
         verbose_name_plural = _("Candidatures")
-        unique_together = ("student", "offer")
+        indexes = [
+            models.Index(fields=["status", "created_at"]),
+            models.Index(fields=["offer", "status"]),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["student", "offer"],
+                name="unique_application_per_student_offer",
+            )
+        ]
 
     def __str__(self) -> str:
-        return f"{self.student} -> {self.offer}"
+        return f"Candidature de {self.student} pour {self.offer}"
 
