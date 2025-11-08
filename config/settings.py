@@ -152,7 +152,7 @@ JAZZMIN_SETTINGS = {
     "site_header": "Internship Management",
     "site_brand": "Internship MGMT",
     "site_logo": "images/logo.svg",
-    "site_logo_classes": "img-circle",
+    "site_logo_classes": "img-fluid",
     "welcome_sign": "Bienvenue sur votre tableau de bord stages",
     "copyright": "Internship Management",
     "show_ui_builder": False,
@@ -177,19 +177,35 @@ JAZZMIN_SETTINGS = {
         "evaluations",
         "reporting",
     ],
+    "footer_links": [
+        {
+            "name": "Documentation",
+            "url": "https://intranet.example.com/docs",
+            "new_tab": True,
+        },
+        {
+            "name": "Support IT",
+            "url": "mailto:support@example.com",
+        },
+        {
+            "name": "Politique de confidentialité",
+            "url": "https://intranet.example.com/politique-confidentialite",
+            "new_tab": True,
+        },
+    ],
 }
 
 JAZZMIN_UI_TWEAKS = {
-    "theme": "lux",
-    "dark_mode_theme": "darkly",
-    "body_bg": "#f5f6fa",
-    "brand_colour": "#2c3e50",
-    "link_colour": "#2980b9",
-    "navbar": "navbar-dark bg-primary",
+    "theme": "flatly",
+    "dark_mode_theme": "cyborg",
+    "body_bg": "#f3f4f6",
+    "brand_colour": "#1f2937",
+    "link_colour": "#2563eb",
+    "navbar": "navbar-dark bg-dark",
     "sidebar": "sidebar-dark-primary",
     "button_classes": {
         "primary": "btn btn-primary",
-        "secondary": "btn btn-secondary",
+        "secondary": "btn btn-outline-secondary",
     },
 }
 
