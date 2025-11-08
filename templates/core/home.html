@@ -1,13 +1,489 @@
-{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestion des Stages</title>
+    <style>
+        :root {
+            --color-primary: #0ea5e9;
+            --color-secondary: #38bdf8;
+            --color-light: #f0f9ff;
+            --color-lighter: #e0f2fe;
+            --color-dark: #0b1e3a;
+            --color-text: #0f172a;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --shadow-soft: 0 20px 45px rgba(14, 165, 233, 0.15);
+            --shadow-card: 0 16px 30px rgba(14, 165, 233, 0.12);
+        }
 
-{% block content %}
-<div class="container py-5">
-  <div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-5">
-      <h1 class="display-5 fw-bold">Portail de gestion des stages</h1>
-      <p class="col-md-8 fs-4">Centralisez le suivi des entreprises, offres et affectations pour vos étudiants.</p>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: var(--color-text);
+            background: linear-gradient(180deg, #f8fcff 0%, #f0f9ff 35%, #e0f2fe 100%);
+            line-height: 1.6;
+            animation: bodyFade 0.6s ease-out both;
+        }
+
+        @keyframes bodyFade {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        a:focus-visible,
+        button:focus-visible {
+            outline: 3px solid rgba(14, 165, 233, 0.6);
+            outline-offset: 4px;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem clamp(1.5rem, 4vw, 4rem);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+        }
+
+        .brand {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--color-dark);
+            letter-spacing: 0.02em;
+        }
+
+        .nav-link {
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 999px;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus-visible {
+            background: rgba(14, 165, 233, 0.15);
+            color: var(--color-dark);
+            transform: translateY(-2px);
+        }
+
+        main {
+            flex: 1;
+        }
+
+        .section {
+            padding: clamp(3rem, 6vw, 6rem) clamp(1.5rem, 4vw, 4rem);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 80vh;
+            display: grid;
+            align-items: center;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .hero__content {
+            max-width: 560px;
+        }
+
+        .hero__eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.35rem 0.9rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            background: rgba(14, 165, 233, 0.12);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero__title {
+            font-size: clamp(2.5rem, 6vw, 3.8rem);
+            line-height: 1.15;
+            margin: 0 0 1rem;
+            color: var(--color-dark);
+        }
+
+        .hero__subtitle {
+            font-size: 1.05rem;
+            margin: 0 0 2.25rem;
+            color: rgba(15, 23, 42, 0.8);
+        }
+
+        .hero__cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.95rem 1.9rem;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        .hero__cta:hover,
+        .hero__cta:focus-visible {
+            transform: translateY(-3px);
+            box-shadow: 0 24px 40px rgba(14, 165, 233, 0.25);
+        }
+
+        .hero__cta:active {
+            transform: translateY(1px);
+            opacity: 0.9;
+        }
+
+        .hero__visual {
+            background: linear-gradient(160deg, rgba(14, 165, 233, 0.28), rgba(224, 242, 254, 0.9));
+            border-radius: var(--radius-lg);
+            padding: 2.75rem;
+            box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero__visual::before,
+        .hero__visual::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: radial-gradient(circle at top right, rgba(248, 250, 252, 0.7) 0%, transparent 55%);
+            mix-blend-mode: lighten;
+        }
+
+        .hero__visual::after {
+            background: radial-gradient(circle at bottom left, rgba(14, 165, 233, 0.35) 0%, transparent 60%);
+            mix-blend-mode: screen;
+        }
+
+        .hero__visual-content {
+            position: relative;
+            display: grid;
+            gap: 1.25rem;
+            color: rgba(15, 23, 42, 0.86);
+        }
+
+        .hero__badge {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-card);
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .hero__badge span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.85), rgba(56, 189, 248, 0.65));
+            color: white;
+            font-weight: 700;
+        }
+
+        /* Features */
+        .features {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .section__title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-size: clamp(2rem, 4vw, 2.6rem);
+            color: var(--color-dark);
+        }
+
+        .section__subtitle {
+            text-align: center;
+            margin: -1.5rem auto 2.5rem;
+            max-width: 640px;
+            color: rgba(15, 23, 42, 0.7);
+        }
+
+        .feature-grid {
+            display: grid;
+            gap: 1.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            padding: 0 clamp(1.5rem, 4vw, 4rem) clamp(3rem, 5vw, 4rem);
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-card);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            border: 1px solid rgba(14, 165, 233, 0.12);
+        }
+
+        .feature-card:hover,
+        .feature-card:focus-within {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 40px rgba(14, 165, 233, 0.2);
+        }
+
+        .feature-card__title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--color-dark);
+        }
+
+        .feature-card__text {
+            color: rgba(15, 23, 42, 0.72);
+            font-size: 0.95rem;
+        }
+
+        /* KPIs */
+        .kpi-band {
+            background: linear-gradient(120deg, rgba(14, 165, 233, 0.92), rgba(56, 189, 248, 0.8));
+            color: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1.5rem;
+            padding: clamp(2rem, 5vw, 3rem);
+        }
+
+        .kpi-item {
+            text-align: center;
+        }
+
+        .kpi-item__value {
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .kpi-item__label {
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
+            opacity: 0.88;
+        }
+
+        /* Audience */
+        .audience {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.75rem;
+            padding: clamp(2.5rem, 5vw, 4rem);
+        }
+
+        .audience-card {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.75rem;
+            border: 1px solid rgba(14, 165, 233, 0.16);
+            box-shadow: var(--shadow-card);
+        }
+
+        .audience-card__title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--color-dark);
+        }
+
+        .audience-card__text {
+            color: rgba(15, 23, 42, 0.72);
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 1.5rem 3rem;
+            color: rgba(15, 23, 42, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero__visual {
+                padding: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header {
+                padding: 1.25rem 1.1rem;
+            }
+
+            .section {
+                padding: 3rem 1.25rem;
+            }
+
+            .hero__subtitle {
+                font-size: 1rem;
+            }
+
+            .hero__visual-content {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- Header -->
+        <header class="header">
+            <span class="brand">Gestion des Stages</span>
+            <a class="nav-link" href="#contact">Contact</a>
+        </header>
+
+        <main>
+            <!-- Hero -->
+            <section class="section">
+                <div class="hero">
+                    <div class="hero__content">
+                        <span class="hero__eyebrow">Solution SI dédiée aux parcours étudiants</span>
+                        <h1 class="hero__title">Centralisez et suivez vos stages</h1>
+                        <p class="hero__subtitle">Supervisez chaque étape des stages : entreprises, candidatures, affectations et livrables au même endroit.</p>
+                        <a class="hero__cta" href="{% url 'admin:login' %}">Se connecter (Admin)</a>
+                    </div>
+                    <div class="hero__visual" aria-hidden="true">
+                        <div class="hero__visual-content">
+                            <div class="hero__badge"><span>1</span> Déployez un portail intégré pour tous vos acteurs.</div>
+                            <div class="hero__badge"><span>2</span> Automatisez le suivi et gagnez en visibilité.</div>
+                            <div class="hero__badge"><span>3</span> Accédez à des rapports consolidés en temps réel.</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features -->
+            <section class="section features">
+                <h2 class="section__title">Fonctionnalités clés</h2>
+                <p class="section__subtitle">Une plateforme complète pour piloter les stages : collecte des opportunités, suivi des candidatures et évaluation finale.</p>
+                <div class="feature-grid">
+                    <article class="feature-card">
+                        <h3 class="feature-card__title">Entreprises &amp; Offres</h3>
+                        <p class="feature-card__text">Centralisez les fiches entreprises, publiez des offres et visualisez les opportunités par domaine.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3 class="feature-card__title">Candidatures</h3>
+                        <p class="feature-card__text">Suivez les candidatures déposées, les relances et les décisions pour chaque étudiant.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3 class="feature-card__title">Affectations</h3>
+                        <p class="feature-card__text">Validez les affectations, notifiez tuteurs et étudiants et gérez les conventions en ligne.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3 class="feature-card__title">Livrables</h3>
+                        <p class="feature-card__text">Collectez comptes rendus et rapports, suivez les échéances et relancez automatiquement.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3 class="feature-card__title">Évaluations</h3>
+                        <p class="feature-card__text">Réalisez des grilles d’évaluation harmonisées et consolidez les retours des tuteurs.</p>
+                    </article>
+                    <article class="feature-card">
+                        <h3 class="feature-card__title">Reporting</h3>
+                        <p class="feature-card__text">Analysez vos indicateurs clés grâce à des tableaux de bord prêts à l’emploi.</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- KPIs -->
+            <section class="section">
+                <div class="kpi-band">
+                    <div class="kpi-grid">
+                        <div class="kpi-item">
+                            <div class="kpi-item__value">128</div>
+                            <div class="kpi-item__label">Offres actives</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-item__value">76</div>
+                            <div class="kpi-item__label">Affectations en cours</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-item__value">34</div>
+                            <div class="kpi-item__label">Livrables à rendre</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Audience -->
+            <section class="section audience" id="contact">
+                <h2 class="section__title">Pour qui ?</h2>
+                <p class="section__subtitle">Chaque profil dispose d’un espace personnalisé pour collaborer efficacement tout au long du stage.</p>
+                <div class="audience-grid">
+                    <article class="audience-card">
+                        <h3 class="audience-card__title">Étudiants</h3>
+                        <p class="audience-card__text">Visualisent les offres, déposent leurs candidatures, partagent leurs livrables et suivent les retours.</p>
+                    </article>
+                    <article class="audience-card">
+                        <h3 class="audience-card__title">Tuteurs</h3>
+                        <p class="audience-card__text">Accèdent aux fiches stagiaires, valident les missions et déposent leurs évaluations en quelques clics.</p>
+                    </article>
+                    <article class="audience-card">
+                        <h3 class="audience-card__title">Responsables</h3>
+                        <p class="audience-card__text">Pilotent l’ensemble des stages, contrôlent les échéances et disposent de tableaux de bord synthétiques.</p>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            © {{ now|date:"Y" }} Gestion des Stages. Tous droits réservés.
+        </footer>
     </div>
-  </div>
-</div>
-{% endblock %}
-
+</body>
+</html>
