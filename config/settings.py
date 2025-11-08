@@ -3,6 +3,8 @@ from __future__ import annotations
 import environ
 from pathlib import Path
 
+from celery.schedules import crontab
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
@@ -105,6 +107,10 @@ LOGIN_URL = "admin:login"
 LOGIN_REDIRECT_URL = "core:home"
 LOGOUT_REDIRECT_URL = "admin:login"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = env(
+    "DEFAULT_FROM_EMAIL", default="noreply@internship-mgmt.local"
+)
+REPORTS_DIGEST_RECIPIENTS = env.list("REPORTS_DIGEST_RECIPIENTS", default=[])
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
@@ -126,6 +132,16 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_BEAT_SCHEDULE = {
+    "daily_deadline_reminders": {
+        "task": "core.tasks.daily_deadline_reminders",
+        "schedule": crontab(hour=8, minute=0),
+    },
+    "weekly_campaign_digest": {
+        "task": "core.tasks.weekly_campaign_digest",
+        "schedule": crontab(hour=9, minute=0, day_of_week="monday"),
+    },
+}
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 
