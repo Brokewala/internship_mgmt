@@ -1,18 +1,37 @@
-FROM python:3.12-slim
+# Utilisez une image de base qui inclut Python
+FROM python:3.10
 
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
+# Définit le répertoire de travail dans le conteneur
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Met à jour les paquets et installe les dépendances système nécessaires
+RUN apt-get update && \
+    apt-get install -y git libpq-dev ffmpeg
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Met à jour pip
+RUN pip install --upgrade pip
 
-COPY . .
+# Copie les fichiers requis dans le conteneur
+COPY requirements.txt /app/
 
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Installe les dépendances Python
+RUN pip install -r requirements.txt
+
+# Copie le reste des fichiers dans le conteneur
+COPY . /app/
+
+# Copie le script d'entrée dans le conteneur
+COPY entrypoint.sh /app/
+
+# Rendre le script d'entrée exécutable
+RUN chmod +x /app/entrypoint.sh
+
+# Définir le script d'entrée comme point d'entrée
+ENTRYPOINT ["/app/entrypoint.sh"]
+
+# Expose le port sur lequel Django écoute
+EXPOSE 8000
+
+# Commande pour démarrer le serveur Django
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["sh", "-c", "daphne -b 0.0.0.0 -p ${PORT} solar_backend.asgi:application"]
