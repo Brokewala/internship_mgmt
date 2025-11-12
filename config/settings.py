@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-import environ
+from collections.abc import Iterable
 from pathlib import Path
+
+import environ
 
 from celery.schedules import crontab
 
@@ -9,14 +11,40 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
     DEBUG=(bool, False),
-    ALLOWED_HOSTS=(list, ["*"]),
 )
 env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = 'django-insecure-)9jijekovj+6si)t^65&vr1543!(v!72@*kscxvs6v0sx#8lz^'
-DEBUG = True
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
-CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
+DEBUG = env.bool("DEBUG", default=False)
+
+
+def csv_env(name: str, default: Iterable[str] | None = None) -> list[str]:
+    """Parse a comma separated environment variable into a list of values."""
+
+    raw_value = env.str(name, default=None)
+    if raw_value is None or raw_value == "":
+        return list(default or [])
+
+    return [item.strip() for item in raw_value.split(",") if item.strip()]
+
+
+ALLOWED_HOSTS = csv_env("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
+CSRF_TRUSTED_ORIGINS = csv_env("CSRF_TRUSTED_ORIGINS", default=[])
+
+if DEBUG:
+    for host in ["localhost", "127.0.0.1", "[::1]"]:
+        if host not in ALLOWED_HOSTS:
+            ALLOWED_HOSTS.append(host)
+
+    for origin in [
+        "http://localhost",
+        "http://127.0.0.1",
+        "http://127.0.0.1:8000",
+        "https://localhost",
+        "https://127.0.0.1",
+    ]:
+        if origin not in CSRF_TRUSTED_ORIGINS:
+            CSRF_TRUSTED_ORIGINS.append(origin)
 
 INSTALLED_APPS = [
     "jazzmin",
@@ -231,4 +259,10 @@ LOGGING = {
         "level": "INFO",
     },
 }
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SAMESITE = "Lax"
+USE_X_FORWARDED_HOST = True
 
