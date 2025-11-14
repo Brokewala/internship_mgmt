@@ -109,10 +109,10 @@ ASGI_APPLICATION = "config.asgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "dbcaro",
-        "USER": "dbcaro_user",
-        "PASSWORD": "Oy5nKbMlbh7rmq43ZrFFYtOrbb5XqYVJ",
-        "HOST": "dpg-d4bo1vs9c44c738aak80-a.oregon-postgres.render.com",
+        "NAME": "dbcaros",
+        "USER": "dbcaros_user",
+        "PASSWORD": "SkU4Z6JCjFBKwcZYbpxOxoSCLTauCj9q",
+        "HOST": "dpg-d4boi79r0fns73aoorr0-a.oregon-postgres.render.com",
         "PORT": "5432",
     }
 }
