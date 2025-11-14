@@ -4,6 +4,7 @@ from collections.abc import Iterable
 from pathlib import Path
 
 import environ
+import dj_database_url
 
 from celery.schedules import crontab
 
@@ -107,10 +108,14 @@ WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
 DATABASES = {
-    "default": env.db(
-        "DATABASE_URL",
-        default="postgresql://dbcaro_user:Oy5nKbMlbh7rmq43ZrFFYtOrbb5XqYVJ@dpg-d4bo1vs9c44c738aak80-a.oregon-postgres.render.com/dbcaro",
-    )
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "dbcaro",
+        "USER": "dbcaro_user",
+        "PASSWORD": "Oy5nKbMlbh7rmq43ZrFFYtOrbb5XqYVJ",
+        "HOST": "dpg-d4bo1vs9c44c738aak80-a.oregon-postgres.render.com",
+        "PORT": "5432",
+    }
 }
 
 # DATABASES = {
