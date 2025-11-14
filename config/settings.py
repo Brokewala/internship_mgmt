@@ -106,19 +106,15 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
-# DATABASES = {
-#     "default": env.db(
-#         "DATABASE_URL",
-#         default="postgresql://internship_mgmt_vg0z_user:xXpSXtKh3vT7VqpK7VZM1UVapvQCJVwv@dpg-d47fnlfdiees739b9hs0-a.oregon-postgres.render.com/internship_mgmt_vg0z",
-#     )
-# }
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+    "default": "postgresql://dbcaro_user:Oy5nKbMlbh7rmq43ZrFFYtOrbb5XqYVJ@dpg-d4bo1vs9c44c738aak80-a.oregon-postgres.render.com/dbcaro"}
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
