@@ -107,7 +107,11 @@ WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
 
 DATABASES = {
-    "default": "postgresql://dbcaro_user:Oy5nKbMlbh7rmq43ZrFFYtOrbb5XqYVJ@dpg-d4bo1vs9c44c738aak80-a.oregon-postgres.render.com/dbcaro"}
+    "default": env.db(
+        "DATABASE_URL",
+        default="postgresql://dbcaro_user:Oy5nKbMlbh7rmq43ZrFFYtOrbb5XqYVJ@dpg-d4bo1vs9c44c738aak80-a.oregon-postgres.render.com/dbcaro",
+    )
+}
 
 # DATABASES = {
 #     "default": {
