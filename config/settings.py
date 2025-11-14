@@ -4,7 +4,6 @@ from collections.abc import Iterable
 from pathlib import Path
 
 import environ
-import dj_database_url
 
 from celery.schedules import crontab
 
