@@ -9,7 +9,6 @@
         <th>Offre</th>
         <th>Entreprise</th>
         <th>Statut</th>
-        <th>Créée le</th>
       </tr>
     </thead>
     <tbody>
@@ -18,11 +17,10 @@
         <td>{{ candidature.offer.title }}</td>
         <td>{{ candidature.offer.entreprise.name }}</td>
         <td>{{ candidature.get_status_display }}</td>
-        <td>{{ candidature.created_at|date:"d/m/Y" }}</td>
       </tr>
       {% empty %}
       <tr>
-        <td colspan="4">Aucune candidature pour le moment.</td>
+        <td colspan="3">Aucune candidature pour le moment.</td>
       </tr>
       {% endfor %}
     </tbody>
