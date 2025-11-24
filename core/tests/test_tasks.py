@@ -8,7 +8,7 @@ from django.test import TestCase, override_settings
 from django.utils import timezone
 
 from affectations.models import Affectation
-from core.models import Alerte, Departement, Programme, Promotion
+from core.models import Departement, Programme, Promotion
 from core.tasks import daily_deadline_reminders, weekly_campaign_digest
 from entreprises.models import Entreprise
 from offres.models import Campagne, OffreStage
@@ -77,12 +77,11 @@ class TaskTests(TestCase):
         )
         mail.outbox = []
 
-    def test_daily_deadline_reminders_creates_alerts_and_emails(self) -> None:
+    def test_daily_deadline_reminders_sends_emails_without_alerts(self) -> None:
         result = daily_deadline_reminders()
 
         self.assertEqual(result["emails_sent"], 1)
-        self.assertEqual(result["alerts_generated"], 2)
-        self.assertEqual(Alerte.objects.filter(affectation=self.affectation).count(), 2)
+        self.assertEqual(result["alerts_generated"], 0)
         self.assertEqual(len(mail.outbox), 1)
         email = mail.outbox[0]
         self.assertIn("Rapport intermédiaire", email.subject)

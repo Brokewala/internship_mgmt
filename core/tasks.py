@@ -9,7 +9,6 @@ from django.utils import timezone
 
 from suivis.models import Livrable
 
-from .services.alerts import generate_deadline_alerts
 from .services.emails import send_deadline_email
 from .services.reports import export_assignments_by_campaign
 
@@ -33,8 +32,7 @@ def daily_deadline_reminders() -> dict[str, int]:
     emails_sent = 0
     for livrable in deliverables:
         emails_sent += send_deadline_email(livrable)
-    alerts = generate_deadline_alerts(reference_date=reference_date)
-    return {"emails_sent": emails_sent, "alerts_generated": len(alerts)}
+    return {"emails_sent": emails_sent, "alerts_generated": 0}
 
 
 @shared_task

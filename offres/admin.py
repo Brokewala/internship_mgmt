@@ -5,7 +5,7 @@ from candidatures.models import Candidature
 from core.admin_mixins import AdminPageDescriptionMixin
 from core.admin_utils import export_as_csv_action
 
-from .models import Campagne, OffreStage
+from .models import OffreStage
 
 
 class CandidatureInline(admin.TabularInline):
@@ -14,26 +14,6 @@ class CandidatureInline(admin.TabularInline):
     fields = ("student", "status", "created_at")
     readonly_fields = ("created_at",)
     show_change_link = True
-
-
-@admin.register(Campagne)
-class CampagneAdmin(AdminPageDescriptionMixin, admin.ModelAdmin):
-    page_description = (
-        "Campagnes de stage par promotion avec période d'ouverture et titre associé."
-    )
-    list_display = ("title", "promotion", "start_date", "end_date")
-    list_filter = ("promotion", "start_date")
-    search_fields = ("title", "promotion__programme__title")
-    actions = ("exporter_en_csv",)
-
-    @admin.action(description=_("Exporter la sélection en CSV"))
-    def exporter_en_csv(self, request, queryset):
-        return export_as_csv_action(
-            self,
-            request,
-            queryset,
-            field_names=("id", "title", "promotion", "start_date", "end_date"),
-        )
 
 
 @admin.register(OffreStage)
