@@ -1,14 +1,17 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from core.admin_mixins import AuditLogAdminMixin
+from core.admin_mixins import AdminPageDescriptionMixin, AuditLogAdminMixin
 from core.admin_utils import export_as_csv_action
 
 from .models import Alerte, AuditLog, Departement, Programme, Promotion
 
 
 @admin.register(Departement)
-class DepartementAdmin(AuditLogAdminMixin, admin.ModelAdmin):
+class DepartementAdmin(AdminPageDescriptionMixin, AuditLogAdminMixin, admin.ModelAdmin):
+    page_description = (
+        "Départements académiques utilisés pour structurer les programmes et promotions."
+    )
     list_display = ("code", "name", "created_at")
     search_fields = ("code", "name")
     actions = ("exporter_en_csv",)
@@ -21,7 +24,10 @@ class DepartementAdmin(AuditLogAdminMixin, admin.ModelAdmin):
 
 
 @admin.register(Programme)
-class ProgrammeAdmin(AuditLogAdminMixin, admin.ModelAdmin):
+class ProgrammeAdmin(AdminPageDescriptionMixin, AuditLogAdminMixin, admin.ModelAdmin):
+    page_description = (
+        "Programmes rattachés à un département avec code, intitulé et rattachement."
+    )
     list_display = ("code", "title", "departement")
     search_fields = ("code", "title", "departement__name")
     list_filter = ("departement",)
@@ -38,7 +44,10 @@ class ProgrammeAdmin(AuditLogAdminMixin, admin.ModelAdmin):
 
 
 @admin.register(Promotion)
-class PromotionAdmin(AuditLogAdminMixin, admin.ModelAdmin):
+class PromotionAdmin(AdminPageDescriptionMixin, AuditLogAdminMixin, admin.ModelAdmin):
+    page_description = (
+        "Promotions par programme avec année et dates clés pour organiser les campagnes."
+    )
     list_display = ("label", "programme", "year", "start_date", "end_date")
     list_filter = ("programme", "year")
     search_fields = ("label", "programme__title")
@@ -55,7 +64,10 @@ class PromotionAdmin(AuditLogAdminMixin, admin.ModelAdmin):
 
 
 @admin.register(Alerte)
-class AlerteAdmin(AuditLogAdminMixin, admin.ModelAdmin):
+class AlerteAdmin(AdminPageDescriptionMixin, AuditLogAdminMixin, admin.ModelAdmin):
+    page_description = (
+        "Alertes générées sur les affectations avec niveau, résolution et horodatage."
+    )
     list_display = ("titre", "niveau", "affectation", "resolue", "created_at")
     list_filter = ("niveau", "resolue", "created_at")
     search_fields = ("titre", "message", "affectation__student__username")
@@ -72,7 +84,8 @@ class AlerteAdmin(AuditLogAdminMixin, admin.ModelAdmin):
 
 
 @admin.register(AuditLog)
-class AuditLogAdmin(admin.ModelAdmin):
+class AuditLogAdmin(AdminPageDescriptionMixin, admin.ModelAdmin):
+    page_description = "Journal des opérations effectuées dans l'administration (lecture seule)."
     list_display = ("action", "actor", "occurred_at")
     list_filter = ("occurred_at",)
     search_fields = ("action", "actor__username")

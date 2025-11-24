@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any, Iterable
 
+from django.contrib import admin
 from django.core.serializers.json import DjangoJSONEncoder
 from django.forms import model_to_dict
 from django.utils.translation import gettext_lazy as _
@@ -114,3 +115,33 @@ class AuditLogAdminMixin:
                 object_id=object_id,
                 object_repr=object_repr,
             )
+
+
+class AdminPageDescriptionMixin:
+    """Expose un texte descriptif sur les écrans d'administration."""
+
+    change_list_template = "admin/model_description_change_list.html"
+    change_form_template = "admin/model_description_change_form.html"
+    page_description: str = ""
+    change_form_page_description: str | None = None
+
+    def get_page_description(self) -> str:
+        return self.page_description
+
+    def get_changeform_description(self, obj=None) -> str:
+        return self.change_form_page_description or self.get_page_description()
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context.setdefault("page_description", self.get_page_description())
+        return super().changelist_view(request, extra_context=extra_context)
+
+    def changeform_view(self, request, object_id=None, form_url="", extra_context=None):
+        extra_context = extra_context or {}
+        extra_context.setdefault("page_description", self.get_changeform_description())
+        return super().changeform_view(
+            request,
+            object_id=object_id,
+            form_url=form_url,
+            extra_context=extra_context,
+        )

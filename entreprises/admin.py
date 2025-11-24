@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
+from core.admin_mixins import AdminPageDescriptionMixin
 from core.admin_utils import export_as_csv_action
 
 from .models import ContactEntreprise, Entreprise
@@ -14,7 +15,10 @@ class ContactEntrepriseInline(admin.TabularInline):
 
 
 @admin.register(Entreprise)
-class EntrepriseAdmin(admin.ModelAdmin):
+class EntrepriseAdmin(AdminPageDescriptionMixin, admin.ModelAdmin):
+    page_description = (
+        "Fiches entreprises avec coordonnées principales et contacts associés."
+    )
     list_display = ("name", "website", "contact_email", "created_at")
     search_fields = ("name", "contact_email", "contacts__last_name")
     list_filter = ("created_at",)
