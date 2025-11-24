@@ -1,14 +1,19 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
+from core.admin_mixins import AdminPageDescriptionMixin
+
 from .models import User, UserProfile
 
 
 @admin.register(User)
-class CustomUserAdmin(UserAdmin):
+class CustomUserAdmin(AdminPageDescriptionMixin, UserAdmin):
+    page_description = (
+        "Gestion des comptes utilisateurs : identifiants, rôles, organisation et droits."
+    )
     fieldsets = UserAdmin.fieldsets + (
         (
-            "Profil", 
+            "Profil",
             {
                 "fields": ("role", "phone_number", "organisation"),
             },
@@ -20,7 +25,10 @@ class CustomUserAdmin(UserAdmin):
 
 
 @admin.register(UserProfile)
-class UserProfileAdmin(admin.ModelAdmin):
+class UserProfileAdmin(AdminPageDescriptionMixin, admin.ModelAdmin):
+    page_description = (
+        "Profils détaillés associés aux utilisateurs avec liens externes et coordonnées."
+    )
     list_display = ("user", "linkedin_url", "portfolio_url")
     search_fields = ("user__username", "user__email")
 

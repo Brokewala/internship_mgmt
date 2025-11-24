@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
 from candidatures.models import Candidature
+from core.admin_mixins import AdminPageDescriptionMixin
 from core.admin_utils import export_as_csv_action
 
 from .models import Campagne, OffreStage
@@ -16,7 +17,10 @@ class CandidatureInline(admin.TabularInline):
 
 
 @admin.register(Campagne)
-class CampagneAdmin(admin.ModelAdmin):
+class CampagneAdmin(AdminPageDescriptionMixin, admin.ModelAdmin):
+    page_description = (
+        "Campagnes de stage par promotion avec période d'ouverture et titre associé."
+    )
     list_display = ("title", "promotion", "start_date", "end_date")
     list_filter = ("promotion", "start_date")
     search_fields = ("title", "promotion__programme__title")
@@ -33,7 +37,10 @@ class CampagneAdmin(admin.ModelAdmin):
 
 
 @admin.register(OffreStage)
-class OffreStageAdmin(admin.ModelAdmin):
+class OffreStageAdmin(AdminPageDescriptionMixin, admin.ModelAdmin):
+    page_description = (
+        "Offres de stage associées à une entreprise et une campagne avec localisation, dates et statut."
+    )
     list_display = (
         "title",
         "entreprise",

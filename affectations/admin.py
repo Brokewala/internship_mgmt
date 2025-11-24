@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import path, reverse
 from django.utils.translation import gettext_lazy as _
 
-from core.admin_mixins import AuditLogAdminMixin
+from core.admin_mixins import AdminPageDescriptionMixin, AuditLogAdminMixin
 from core.admin_utils import export_as_csv_action
 from evaluations.models import EvaluationTuteurEcole, EvaluationTuteurEntreprise
 from suivis.models import Livrable
@@ -38,7 +38,10 @@ class EvaluationEcoleInline(admin.StackedInline):
 
 
 @admin.register(Affectation)
-class AffectationAdmin(AuditLogAdminMixin, admin.ModelAdmin):
+class AffectationAdmin(AdminPageDescriptionMixin, AuditLogAdminMixin, admin.ModelAdmin):
+    page_description = (
+        "Affectations d'étudiants en entreprise avec dates, statut, livrables et évaluations."
+    )
     list_display = ("student", "entreprise", "start_date", "end_date", "status")
     list_filter = ("status", "entreprise", "start_date")
     search_fields = ("student__username", "entreprise__name")

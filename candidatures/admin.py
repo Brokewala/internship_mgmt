@@ -1,12 +1,15 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from core.admin_mixins import AuditLogAdminMixin
+from core.admin_mixins import AdminPageDescriptionMixin, AuditLogAdminMixin
 from .models import Candidature
 
 
 @admin.register(Candidature)
-class CandidatureAdmin(AuditLogAdminMixin, admin.ModelAdmin):
+class CandidatureAdmin(AdminPageDescriptionMixin, AuditLogAdminMixin, admin.ModelAdmin):
+    page_description = (
+        "Candidatures des étudiants aux offres avec statut et actions de décision."
+    )
     list_display = ("student", "offer", "status", "created_at")
     list_filter = ("status", "offer__entreprise")
     search_fields = ("student__username", "offer__title")
